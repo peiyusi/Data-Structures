@@ -1,2 +1,1 @@
-# Data-Structures
-My codes for learning Data Structures
+教材为浙大《数据结构》（第二版）， 题目为PTA"浙大版《数据结构（第2版）》题目集".
