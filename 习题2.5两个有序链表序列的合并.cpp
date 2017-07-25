@@ -2,9 +2,9 @@ List Merge(List L1, List L2) {
 	List temp1 = L1->Next;
 	List temp2 = L2->Next;
 	List p;
-	p = (List)malloc(sizeof(Node));
+	p = (List)malloc(sizeof(List));
 	List temp = p;
-	while (temp1&&temp2) {
+	while (temp1 && temp2) {
 		if (temp1->Data < temp2->Data) {
 			temp->Next = temp1;
 			temp1 = temp1->Next;
