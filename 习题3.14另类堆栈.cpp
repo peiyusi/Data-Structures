@@ -5,7 +5,6 @@ bool Push( Stack S, ElementType X ) {
 	} else {
 		S->Data[S->Top] = X;
 		S->Top++;
-		return true;
 	}
 }
 

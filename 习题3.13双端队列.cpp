@@ -1,49 +1,43 @@
 bool Push( ElementType X, Deque D ) {
     bool flag = true;
-    if (!D) {
-    	flag = false;
-	} else if (D->Rear == D->MaxSize) {
+    if (D->Front == (D->Rear + 1) % D->MaxSize) {
     	flag = false;
 	} else {
+		D->Front = (D->Front + D->MaxSize - 1) % D->MaxSize;
 		D->Data[D->Front] = X;
-		D->Front++;
 	}
 	
 	return flag;
 }
 
 ElementType Pop( Deque D ) {
-	if (!D) {
-		return false;
-	} else if (D->Front == D->Rear) {
+	ElementType temp;
+	if (D->Front == D->Rear) {
 		return ERROR;
 	} else {
-		D->Front--;
-		return D->Data[D->Front];
+		temp =  D->Data[D->Front];
+		D->Front = (D->Front + 1) % D->MaxSize;
+		return temp;
 	}
 }
 
 bool Inject( ElementType X, Deque D ) {
 	bool flag = true;
-	if (!D) {
-		flag = false;
-	} else if (D->Rear == D->MaxSize) {
+	if (D->Front == (D->Rear + 1) % D->MaxSize) {
 		flag = false;
 	} else {
-		D->Data[D->Front + D->Rear] = X;
-		D->Rear++;
+		D->Data[D->Rear] = X;
+		D->Rear = (D->Rear + 1) % D->MaxSize;
 	}
 	
 	return flag;
 }
 
 ElementType Eject( Deque D ) {
-	if (!D) {
-		return false;
-	} else if (D->Front == D->Rear) {
+	if (D->Front == D->Rear) {
 		return ERROR;
 	} else {
-		D->Rear--;
-		return D->Data[D->Rear];
+	    D->Rear = (D->Rear + D->MaxSize - 1) % D->MaxSize;
+	    return D->Data[D->Rear];
 	}
 }
