@@ -9,7 +9,7 @@ void Reverse(int *arr, int BEGIN, int END) {
 
 void LeftShift(int *arr, int n, int m) {
 	m %= n;
-	Reverse(arr, 0, m-1);
+	Reverse(arr, 0, m-1);  /*Í¬Àí£¬ ÓÒÒÆ£ºReverse(arr, 0, n - 1 - m); Reverse(arr, n - m, n - 1); Reverse(arr, 0, n-1);*/ 
 	Reverse(arr, m, n-1);
 	Reverse(arr, 0, n-1);
 } 
