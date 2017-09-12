@@ -1,5 +1,6 @@
+
 #include <stdio.h>
-#include <stdilib.h>
+#include <stdlib.h>
 
 typedef int ElementType;
 typedef struct Node *PtrToNode;
@@ -9,11 +10,33 @@ struct Node{
 };
 typedef PtrToNode List;
 
-int data1[] = {1, 3, 5};
-int data2[] = {2, 4, 6, 8, 10}; 
+ElementType data1[] = {1, 3, 5};
+ElementType data2[] = {2, 4, 6, 8, 10}; 
 
 List Read() {
+	static int state = 0;
+	ElementType *data, size;
+	List P = (List)malloc(sizeof(List));
+	List Head = P;
+	P->Next = NULL;
 	
+	if (state == 0) {
+		data = data1;
+		size = sizeof(data1) / sizeof(ElementType);
+	} else {
+		data = data2;
+		size = sizeof(data2) / sizeof(ElementType);
+	}
+	
+	for (int i = 0; i < size; i++) {
+	    P->Next = (List)malloc(sizeof(List));
+	    P = P->Next;
+	    P->Data = data[i];
+	    P->Next = NULL;
+	}
+	
+	state++;
+	return Head;
 }
 
 void Print( List L ) {
@@ -64,5 +87,17 @@ List Merge( List L1, List L2 ) {
 	Temp->Next = NULL;
 	
 	return P;
+}
 
+int main() {
+    List L1, L2, L;
+    L1 = Read();
+    L2 = Read();
+    Print(L1);
+    Print(L2);
+    L = Merge(L1, L2);
+    Print(L);
+    Print(L1);
+    Print(L2);
+    return 0;
 }
