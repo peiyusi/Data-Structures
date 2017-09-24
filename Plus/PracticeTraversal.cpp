@@ -2,12 +2,12 @@
 #include <stdlib.h>
 
 struct node {
-    int data;
+    char data;
     struct node* left;
     struct node* right;
 };
 
-struct node* newNode(int data) {
+struct node* newNode(char data) {
 	struct node* node = (struct node*)malloc(sizeof(struct node));
 	node->data = data;
 	node->left = NULL;
@@ -22,7 +22,7 @@ void printPostorder(struct node* node) {
 	}
 	printPostorder(node->left);
 	printPostorder(node->right);
-	printf("%d ", node->data);
+	printf("%c ", node->data);
 }
 
 void printInorder(struct node* node) {
@@ -30,7 +30,7 @@ void printInorder(struct node* node) {
 		return;
 	}
 	printInorder(node->left);
-	printf("%d ", node->data);
+	printf("%c ", node->data);
 	printInorder(node->right);
 }
 
@@ -38,19 +38,19 @@ void printPreorder(struct node* node) {
 	if (node == NULL){
 		return;
 	}
-	printf("%d ", node->data);
+	printf("%c ", node->data);
 	printPreorder(node->left);
 	printPreorder(node->right);
 }
 
 int main() {
-	struct node *root = newNode(4);
-	root->left = newNode(1);
-	root->right = newNode(6);
-	root->left->right = newNode(3);
-	root->right->left = newNode(5);
-	root->left->right->left = newNode(2);
-	root->right->right = newNode(7);
+	struct node *root = newNode('A');
+	root->left = newNode('B');
+	root->right = newNode('C');
+	root->left->left = newNode('D');
+	root->left->right = newNode('E');
+	root->right->right = newNode('G');
+	root->left->left->left = newNode('F');
 	
 	 printf("\nPreorder traversal of binary tree is \n");
 	 printPreorder(root);
