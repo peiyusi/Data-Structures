@@ -32,3 +32,18 @@ int main()
     }
     printf("%05d %d -1\n", list[i], node[list[i]][0]);
 }
+/*LinkList Reverse (LinkList head, int k)
+{
+	int cnt = 1;
+	LinkList new, old, tmp;
+	new = head->Next;
+	old = new->Next;
+	while (cnt < k) {
+		tmp = old->Next;
+		old->Next = new;
+        new = old; old = tmp;
+        cnt++;		
+	}
+	head->Next->Next = old;
+	return new;
+}*/
