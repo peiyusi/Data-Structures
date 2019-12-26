@@ -1,25 +1,13 @@
-#include <stdio.h>
-
-double fn( double x, int n );
-
-int main()
+double fn( double x, int n )
 {
-    double x;
-    int n;
-
-    scanf("%lf %d", &x, &n);
-    printf("%.2f\n", fn(x,n));
-
-    return 0;
-}
-
-double fn(double x, int n) {
-	double result;
 	if (n == 1) {
-		result = x;
+		return x;
 	} else {
-		result = x - x * fn(x, n-1);
+		return x + (-1 * x* fn(x, n));	
 	}
-	
-	return result;
 }
+
+//Recursion
+// x - x * x = x - x^2;
+// x - x * (x - x^2) = x - x^2 + x^3
+// ...
