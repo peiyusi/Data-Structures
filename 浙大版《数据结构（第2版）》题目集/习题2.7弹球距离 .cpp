@@ -1,25 +1,20 @@
-#include <stdio.h>
-#define TOL 1E-2
-
-double dist( double h, double p );
-
-int main()
+double dist( double h, double p )  //non-recursive
 {
-    double h, p, d;
-    scanf("%lf %lf", &h, &p);
-    d = dist(h, p);
-    printf("%.6f\n", d);
-    return 0;
-}
-
-double dist( double h, double p ) {
-	double sum = h;
-	h *= p;
-    while (h > TOL) {
-    	sum += 2 * h;
-    	h *= p;
+	double d = h;
+	
+	while (h * p  >= TOL) {  // notice the condition
+		d += 2 * h * p;
+		h *= p;
 	}
 	
-	return sum;
+	return d;	
 }
 
+double dist( double h, double p )  //recursive
+{
+	if (h * p < TOL) {
+		return h;                  //notice the export of recursion
+	}	
+	
+	return h + h * p + dist(h * p, p);
+}
