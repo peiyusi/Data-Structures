@@ -1,32 +1,55 @@
 #include <stdio.h>
-#include <stdbool.h>
-int main() {
-	int num1, num2;
-	bool flag; 
-	char ch;
-	flag = true;
-	scanf("%d", &num1);
-	while ((ch = getchar()) != '=') {
-		scanf("%d", &num2);
-		if ((ch == '/') && (num2 == 0)) {
-			flag = false; 
-		} else {
-		    switch (ch) {
-			    case '+': num1 += num2; break;
-			    case '-': num1 -= num2; break;
-			    case '*': num1 *= num2; break;
-			    case '/': num1 /= num2; break;
-			    default: flag = false;
-			}
-		}
-		if (!flag) {
-			break;
+#include <stdlib.h> 
+
+void error()
+{
+    printf("ERROR");
+    exit(0);
+}
+
+void getResult()
+{
+	char c;
+	int result, x;
+
+	if ((scanf("%d", &result)) != 1) {
+        error();
+    }
+	while ((c = getchar()) != '=')
+	{
+		if ((scanf("%d", &result)) != 1) {
+            error();
+        }
+		switch(c) {
+			case '+':
+				result += x;
+				break;
+			case '-':
+				c++;
+				result -= x;
+				break;
+			case '*':
+				c++;
+				result *= x;
+				break;
+			case '/':
+				if (x == 0) {
+					error();
+				} else {
+					result /= x;
+					break;
+				}
+            default:
+                error();	
 		}
 	}
-	if ( flag ) {
-		printf("%d\n", num1);
-	} else {
-		printf("ERROR\n");
-	}
+	
+	printf("%d", result);
+}
+
+int main()
+{
+	getResult();
+		
 	return 0;
 }
