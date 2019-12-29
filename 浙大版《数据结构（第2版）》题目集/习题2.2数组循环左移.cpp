@@ -1,33 +1,52 @@
+/*同理， 右移：Reverse(arr, 0, n - 1 - m); Reverse(arr, n - m, n - 1); Reverse(arr, 0, n-1);*/ 
+
 #include <stdio.h>
 
-void Reverse(int *arr, int BEGIN, int END) {
-	int temp;
-	for (; BEGIN < END; BEGIN++, END--) {
-		temp = arr[BEGIN]; arr[BEGIN] = arr[END]; arr[END] = temp; 
-	} 
+void Reverse(int a[], int start, int end)
+{
+	int i, j, temp;
+	for (i = start, j = end; i < j; i++, j--) {
+		temp = a[i];
+		a[i] = a[j];
+		a[j] = temp;
+	}
 }
 
-void LeftShift(int *arr, int n, int m) {
-	m %= n;
-	Reverse(arr, 0, m-1);  /*同理， 右移：Reverse(arr, 0, n - 1 - m); Reverse(arr, n - m, n - 1); Reverse(arr, 0, n-1);*/ 
-	Reverse(arr, m, n-1);
-	Reverse(arr, 0, n-1);
-} 
-int main() {
-	int n, m, i;
-	scanf("%d", &n);
-	scanf("%d", &m);
-	int a[n];
-	for(i = 0; i < n; i++) {
+int main()
+{
+	int a[100], n, m, i;
+	scanf("%d %d", &n, &m);
+	for (i = 0; i < n; i++) {
 		scanf("%d", &a[i]);
-	} 
-	LeftShift(a, n, m);
-	for(i = 0; i < n-1; i++) {
-		printf("%d ", a[i]);
 	}
-	printf("%d", a[n-1]);
+	m %= n;
+	Reverse(a, 0, m - 1);
+	Reverse(a, m, n - 1);
+	Reverse(a, 0, n - 1);
+	
+	printf("%d", a[0]);	
+	for (i = 1; i < n; i++) {
+		printf(" %d", a[i]);
+	}
 	
 	return 0;
 }
+
+/* 解法二，用辅助数组
+void LeftShift(int a[], int n, int m)
+{
+	int s[m], i, j = 0;
+	for (i = 0; i < m; i++) {
+		s[i] = a[i];
+	}
+	for (i = 0; i < n - m; i++) {
+		a[i] = a[i + m];
+	}
+	while (i < n) {
+		a[i++] = s[j++];
+	}
+} 
+*/
+
 
 
