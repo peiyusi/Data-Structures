@@ -24,7 +24,7 @@ int main () {
 
 
 
-
+//DFS solution... 
 
 //#include <stdio.h>
 //
@@ -69,3 +69,49 @@ int main () {
 //	
 //	return 0;
 //}
+
+
+
+//#include <stdio.h>
+//
+//static int visit[10] = {0};
+//static int element[10] = {0};
+//
+//void print(int n)
+//{
+//	int i;
+//	for (i = 0; i < n; i++) {
+//		printf("%d", element[i]);
+//	}
+//	printf("\n");
+//}
+//
+//void dfs(int depth, int n)
+//{
+//	if (depth == n) {
+//		print(n);
+//	} else {
+//		int i;
+//		for (i = 0; i < n; i++) {
+//			if (!visit[i]) {
+//				visit[i] = 1;
+//				element[depth] = i + 1;
+//				dfs(depth + 1, n);
+//				visit[i] = 0;	
+//			} 
+//		}
+//	} 
+//}
+//
+//int main()
+//{
+//	int a[10], n, i;
+//	scanf("%d", &n);
+//    
+//	dfs(0, n);
+//	
+//	return 0;
+//}
+
+
+

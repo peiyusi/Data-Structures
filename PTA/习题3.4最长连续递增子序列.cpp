@@ -1,37 +1,40 @@
 #include <stdio.h>
-struct LNode{
-	int data;
-	int k;
-}s[100001];
 
-int main() {
-	int n;
-	int i, j;
-	int max = 1, a;
+void GetAndPrintSequence(int a[], int n)
+{
+	a[n] = -99999;        //巧妙的设置哨兵，使得最后一次一定会更新！ 
+	int i, len, maxLen, start, isStart;
+	start = isStart = 0;
+	len = maxLen = 1;
+	
+	for (i = 0; i < n; i++) {
+		if (a[i] < a[i + 1]) {
+			len++;
+		} else {
+			if (len > maxLen) {
+				maxLen = len;
+				start = isStart;
+			}
+			isStart = i + 1;
+			len = 1;
+		}
+	}
+	
+	printf("%d", a[start]);
+	for (i = 1; i < maxLen; i++) {
+		printf(" %d", a[start + i]);
+	}	
+} 
+
+int main()
+{
+	int a[100001];  //多开辟一个空间放置哨兵 
+	int n, i;
 	scanf("%d", &n);
 	for (i = 0; i < n; i++) {
-		scanf("%d", &s[i].data);
-		s[i].k = 1;
+		scanf("%d", &a[i]);
 	}
-	for (i = 0; i < n-1; i++) {
-		for (j = i + 1; j < n; j++) {
-			if (s[j].data > s[j-1].data) {
-				s[i].k++;
-			} else {
-				break;
-			}
-		}
-	}
-	for (i = 0; i < n; i++) {
-		if (s[i].k > max) {
-			max = s[i].k;
-			a = i;
-		}
-	}
-	for (i = a; i < a + max-1; i++) {
-		printf("%d ", s[i].data);
-	}
-	printf("%d\n", s[a+max-1].data);
+	GetAndPrintSequence(a, n);
 	
 	return 0;
 }
