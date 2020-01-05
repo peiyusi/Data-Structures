@@ -1,14 +1,15 @@
-bool IsBST ( BinTree T ) {
-  static BinTree prev = NULL;
-  if (T) {
-    if (!IsBST(T->Left)) {
-		return false;
+bool IsBST ( BinTree T )
+{
+    static ElementType prev = -32768;
+    bool l, r;
+	if (T == NULL) {
+		return true;
 	}
-    if (prev != NULL && T->Data <= prev->Data) {
-		return false;
-	}    
-    prev = T;    
-    return IsBST(T->Right);
-  }
-  return true;
+    l = IsBST(T->Left);
+    if (!l || T->Data < prev) {
+        return false;
+    }
+    prev = T->Data;
+    r = IsBST(T->Right);
+    return r;
 }

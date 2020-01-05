@@ -1,103 +1,60 @@
-#include <iostream>
-#include <cstdio>
-#include <cstring>
-#include <algorithm>
-#include <stack>
-using namespace std;
-void Print(char ch) {
-	if (ch == '(') {
-		printf("(-?\n");
-	} else if (ch == '[') {
-		printf("[-?\n");
-	} else if (ch == '{') {
-		printf("{-?\n");
-	} else if (ch == '/') {
-		printf("/*-?\n");
+TODO.. 
+
+
+#include <stdio.h>
+
+char stack[100];
+int top = -1;
+
+void Judge(char c)
+{
+	char t;
+	switch(c) {
+		case '/':
+			stack[++top] = c;
+			break;
+		case '*':
+			stack[++top] = c;
+			break;
+		case '(':
+			stack[++top] = c;
+			break;
+		case '[':
+			stack[++top] = c;
+			break;
+		case '{':
+			stack[++top] = c;
+			break;
+		case ')':
+			t = stack[top];
+			if (t != '(') {
+				printf("NO\n");
+				printf("?-)\n");
+				exit(0);
+			} else {
+				top--;
+				break;
+			}
+		case ']':
+			t = stack[top];
+			if (t != '[') {
+				printf("NO\n");
+				printf("?-)\n");
+				exit(0);
+			}	
 	}
 }
 
-int main() {
-	char str[1000];
-	stack <char> s;
-	int flag = 1;
-	while(1) {
-		gets(str);
-		if(str[0] == '.' && str[1] == 0) {
-			break;
-		}
-		int i;
-		for (i = 0; str[i]; i++) {
-			if (flag == 0) {
-			    break;
-			}
-			if(str[i] == '(' || str[i] == '[' || str[i] == '{') {
-				s.push(str[i]);
-			} else if (str[i] == '/' && str[i+1] == '*') {
-				s.push('/');
-				i++;
-			} else if (str[i] == ')') {
-				if(!s.empty() && s.top() == '(') {
-					s.pop();
-				} else {
-					printf("NO\n");
-					flag = 0;
-					if (s.empty()) {
-						printf("?-)\n");
-					} else {
-						Print(s.top());
-					}
-					break;
-				}
-			} else if (str[i] == ']') {
-				if(!s.empty() && s.top() == '[') {
-					s.pop();
-				} else {
-					printf("NO\n");
-					flag = 0;
-					if (s.empty()) {
-						printf("?-]\n");
-					} else {
-						Print(s.top());
-					}
-					break;
-				}
-		    } else if (str[i] == '}') {
-				if(!s.empty() && s.top() == '{') {
-					s.pop();
-				} else {
-					printf("NO\n");
-					flag = 0;
-					if (s.empty()) {
-						printf("?-}\n");
-					} else {
-						Print(s.top());
-					}
-					break;
-				}
-			} else if (str[i] == '*' && str[i+1] == '/') {
-				i++;
-				if (!s.empty() && s.top() == '/') {
-					s.pop();
-				} else {
-					printf("NO\n");
-					flag = 0;
-					if (s.empty()) {
-						printf("?-*/\n");
-					} else {
-						Print(s.top());
-					}
-					break;
-				}
-			}
-		}
+int main()
+{
+	char c;
+	while ((c = getchar()) != '.') {
+		Judge(c);
 	}
-	if (flag && s.empty()) {
-		printf("YES\n");
-	} else if (flag) {
-		printf("NO\n");
-		Print(s.top());
+	int n = 1;
+	while (n--) {
+		printf("%d", n);
 	}
-	
 	
 	return 0;
 }
