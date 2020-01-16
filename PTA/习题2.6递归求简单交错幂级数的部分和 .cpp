@@ -3,7 +3,7 @@ double fn( double x, int n )
 	if (n == 1) {
 		return x;
 	} else {
-		return x + (-1 * x* fn(x, n));	
+		return x + (-1 * x * fn(x, n));	
 	}
 }
 
