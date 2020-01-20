@@ -16,12 +16,6 @@ int Max(int A, int B)
 
 int GetHeight(AVLTree T)
 {
-//    if (T) {
-//    	int L = GetHeight(T->Left);
-//    	int R = GetHeight(T->Right);
-//        return (L > R ? L : R) + 1;
-//    }
-//	return 0;
 	return T ? T->Height : 0;
 }
 
