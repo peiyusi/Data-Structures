@@ -58,6 +58,67 @@ int Hash(const char *Key, int TableSize)
 	return H % TableSize;
 }
 
+char toLowerCase(char c) {
+	return c + ('a' - 'A');
+}
+
+bool isWordCharacter(char c)
+{
+	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') 
+			|| (c >= '0' && c <= '9') || (c == '_');
+}
+
+bool isUpper(char c) {
+	return c >= 'A' && c <= 'Z';
+}
+
+bool getWord(ElementType str, ElementType word, int *start)
+{
+	int i, len;
+	bool flag;
+	char c;
+	
+	flag = true;
+	i = *start, len = 0;
+	while (str[i]) {
+		c = str[i++];
+		if (isWordCharacter(c)) {
+			if (len != WORDLEN) {
+				if (isUpper(c)) {
+					c = toLowerCase(c);
+				}
+				word[len++] = c;
+			} else {
+				continue;
+			}	
+		} else {
+			if (c == '#') {
+				flag = false;
+				break;
+			}
+			if (len) {
+				break;
+			} 
+		}
+	}
+	
+	*start = i;
+	word[len] = '\0';
+	
+	return flag;
+}
+
+bool Compare(ElementType A, ElementType B)
+{	
+	while (*A && *B && (*A == *B)) {
+		A++, B++;
+	}
+	if (*A && *B) {
+		return (*B - *A) > 0 ? true : false;
+	} 
+	return *A ? false : true;
+} 
+
 HashTable CreateTable()
 {
 	HashTable H;
@@ -111,74 +172,6 @@ void Insert(HashTable H, ElementType Key)
 	}
 }
 
-bool isWordCharacter(char c)
-{
-	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') 
-			|| (c >= '0' && c <= '9') || (c == '_');
-}
-
-bool isUpper(char c) {
-	return c >= 'A' && c <= 'Z';
-}
-
-char toLowerCase(char c) {
-	return c + ('a' - 'A');
-}
-
-bool getWord(ElementType str, ElementType word, int *start)
-{
-	int i, len;
-	bool flag;
-	char c;
-	
-	flag = true;
-	i = *start, len = 0;
-	while (str[i]) {
-		c = str[i++];
-		if (isWordCharacter(c)) {
-			if (len != WORDLEN) {
-				if (isUpper(c)) {
-					c = toLowerCase(c);
-				}
-				word[len++] = c;
-			} else {
-				continue;
-			}	
-		} else {
-			if (c == '#') {
-				flag = false;
-				break;
-			}
-			if (len) {
-				break;
-			} 
-		}
-	}
-	
-	*start = i;
-	word[len] = '\0';
-	
-	return flag;
-}
-
-void Iterate(Position Head) {
-	while (Head) {
-		printf("%d:%s\n", Head->Count, Head->Data);
-		Head = Head->Next;
-	}
-}
-
-bool Compare(ElementType A, ElementType B)
-{	
-	while (*A && *B && (*A == *B)) {
-		A++, B++;
-	}
-	if (*A && *B) {
-		return (*B - *A) > 0 ? true : false;
-	} 
-	return *A ? false : true;
-} 
-
 void DestroyTable(PtrToLNode Head) {
 	PtrToLNode Temp;
 	while (Head) {
@@ -187,14 +180,6 @@ void DestroyTable(PtrToLNode Head) {
 		Head = Temp;
 	}
 }
-
-void Show(HashTable H)
-{
-	
-}
-
-
-
 
 void Print(HashTable H)
 {
@@ -229,7 +214,6 @@ void Print(HashTable H)
 	
 	printf("%d\n", H->Head[H->Size]->Count);
 	P2 = Head->Next;
-	//Iterate(P2);
 	while (Size-- && P2) {
 		printf("%d:%s\n", P2->Count, P2->Data);
 		P2 = P2->Next;	
@@ -240,7 +224,7 @@ void Print(HashTable H)
 
 int main() 
 {
-	freopen("E:in.txt", "r", stdin);
+	//freopen("E:in.txt", "r", stdin);
 	char str[1000], Word[16];
 	bool flag;
 	int i;
@@ -262,7 +246,7 @@ int main()
 	
 	Print(H);
 	
-    fclose(stdin);
+    //fclose(stdin);
     return 0;
 }
  
