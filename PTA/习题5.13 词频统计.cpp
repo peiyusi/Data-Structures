@@ -181,6 +181,60 @@ void DestroyTable(PtrToLNode Head) {
 	}
 }
 
+PtrToLNode Merge(PtrToLNode p1, PtrToLNode p2)
+{
+	PtrToLNode Head, p;
+	
+	Head = (PtrToLNode)malloc(sizeof(struct LNode));
+	Head->Next = NULL;
+	p = Head;
+	while (p1 && p2) {
+		if (p1->Count > p2->Count) {
+			p->Next = p1;
+			p1 = p1->Next;
+		} else if (p1->Count < p2->Count) {
+			p->Next = p2;
+			p2 = p2->Next;
+		} else {
+			if (Compare(p1->Data, p2->Data)) {
+				p->Next = p1;
+				p1 = p1->Next;		
+			} else {
+				p->Next = p2;
+				p2 = p2->Next;		
+			}
+		}
+		p = p->Next;
+		p->Next = NULL;
+	}
+	
+	if (p1) {
+		p->Next = p1;
+	}
+	if (p2) {
+		p->Next = p2;
+	} 
+	
+	return Head->Next;
+}
+
+PtrToLNode Sort(PtrToLNode Head) {
+	PtrToLNode slow, fast, pre;
+	
+	if (!Head || !Head->Next) {
+		return Head;
+	}
+	slow = fast = pre = Head;
+	while (fast && fast->Next) {
+		pre = slow;
+		slow = slow->Next;
+		fast = fast->Next->Next;
+	}
+	pre->Next = NULL;
+	
+	return Merge(Sort(Head), Sort(slow));
+}
+
 void Print(HashTable H)
 {
 	Position P1, P2;
@@ -193,27 +247,22 @@ void Print(HashTable H)
 	for (i = 0; i < H->Size; i++) {
 		P1 = H->Head[i]->Next;
 		while (P1) {
-			P2 = Head;
 			Temp = P1->Next;
-			while (P2->Next && P1->Count < P2->Next->Count) {
-				P2 = P2->Next;
-			}
-			if (!P2->Next) {
-				P2->Next = P1;
-				P1->Next = NULL;
-			} else {
-				while (P2->Next && P1->Count == P2->Next->Count && !Compare(P1->Data, P2->Next->Data)) {
-					P2 = P2->Next;
-				}
-				P1->Next = P2->Next;
-				P2->Next = P1;
-			}
+			P1->Next = Head->Next;
+			Head->Next = P1;
 			P1 = Temp;
 		}	
 	}
-	
 	printf("%d\n", H->Head[H->Size]->Count);
-	P2 = Head->Next;
+	Head = Sort(Head->Next);
+	P2 = Head;
+	
+//	while (P2) {
+//		printf("%d:%s\n", P2->Count, P2->Data);
+//		P2 = P2->Next;
+//	}
+	
+	
 	while (Size-- && P2) {
 		printf("%d:%s\n", P2->Count, P2->Data);
 		P2 = P2->Next;	
