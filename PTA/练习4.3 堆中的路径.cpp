@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 
 #define MAXCAPACITY 1001
@@ -56,7 +55,7 @@ void PrintPath(MinHeap H, int Index)
 
 int main()
 {
-	freopen("E:in.txt", "r", stdin);
+	//freopen("E:in.txt", "r", stdin);
 	int N, M, Index;
 	MinHeap H;
 	
@@ -69,7 +68,6 @@ int main()
 		}
 	}
 
-
-	fclose(stdin);
+	//fclose(stdin);
 	return 0;
 }
