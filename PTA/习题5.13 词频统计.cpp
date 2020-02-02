@@ -205,7 +205,6 @@ PtrToLNode Merge(PtrToLNode p1, PtrToLNode p2)
 			}
 		}
 		p = p->Next;
-		p->Next = NULL;
 	}
 	
 	if (p1) {
@@ -254,15 +253,8 @@ void Print(HashTable H)
 		}	
 	}
 	printf("%d\n", H->Head[H->Size]->Count);
-	Head = Sort(Head->Next);
-	P2 = Head;
-	
-//	while (P2) {
-//		printf("%d:%s\n", P2->Count, P2->Data);
-//		P2 = P2->Next;
-//	}
-	
-	
+	Head->Next = Sort(Head->Next);
+	P2 = Head->Next;
 	while (Size-- && P2) {
 		printf("%d:%s\n", P2->Count, P2->Data);
 		P2 = P2->Next;	
