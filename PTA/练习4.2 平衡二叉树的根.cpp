@@ -4,7 +4,7 @@
 typedef struct AVLNode *AVLTree;
 struct AVLNode {
 	int Data;
-	int Height;
+	int Height;    //AVL树额外定义高度 
 	AVLTree Left;
 	AVLTree Right;
 };
@@ -19,14 +19,14 @@ int GetHeight(AVLTree T)
 	return T ? T->Height : 0;
 }
 
-void UpdateHeight(AVLTree T)
+void UpdateHeight(AVLTree T)  //更新树的高度，为左右子树较大者加一 
 {
-	T->Height = Max(GetHeight(T->Left), GetHeight(T->Right)) + 1;
+	T->Height = Max(GetHeight(T->Left), GetHeight(T->Right)) + 1;  
 }
 
-int GetBF(AVLTree T)
+int GetBF(AVLTree T)   //返回高度差 
 {
-	return GetHeight(T->Left) - GetHeight(T->Right);
+	return GetHeight(T->Left) - GetHeight(T->Right);              
 }
 
 AVLTree LeftRotation(AVLTree A)
@@ -55,7 +55,7 @@ AVLTree RightRotation(AVLTree A)
 
 AVLTree LeftAndRightRotation(AVLTree A)
 {
-	A->Left = RightRotation(A->Left);;
+	A->Left = RightRotation(A->Left);
 	return LeftRotation(A);
 }
 
