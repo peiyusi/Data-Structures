@@ -19,7 +19,7 @@ bool isFull(MaxHeap H)
 
 bool isEmpty(MaxHeap H) 
 {
-	return H->Size;
+	return H->Size == 0;
 }
  
 bool Insert(MaxHeap H, ElementType X)
@@ -106,6 +106,8 @@ MaxHeap BuildHeap()
 	
 	return H;
 }
+
+
 
 int main()
 {
