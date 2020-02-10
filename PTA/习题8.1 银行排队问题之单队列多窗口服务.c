@@ -107,7 +107,7 @@ int GetFinishedTime(int Windows[], int K, int CurrentTime)
 	return CurrentTime + LastTime;
 }
 
-void Print(Queue Q, int N)
+void Print(Queue Q)
 {
 	int Windows[MaxWindow];
 	int ServiceLog[MaxWindow];
@@ -154,7 +154,7 @@ void Print(Queue Q, int N)
 			ServiceLog[WinAvail]++;	
 		}
 				
-		printf("%.1f %d %d\n", (double)TotalTime / (double)N, MaxWaitTime, GetFinishedTime(Windows, K, CurrentTime));
+		printf("%.1f %d %d\n", (double)TotalTime / (double)Q->MaxSize, MaxWaitTime, GetFinishedTime(Windows, K, CurrentTime));
 		printf("%d", ServiceLog[0]);
 		for (i = 1; i < K; i++) {
 			printf(" %d", ServiceLog[i]);
@@ -180,7 +180,7 @@ int main()
 			}
 			Push(Q, X);
 		}
-		Print(Q, N);;
+		Print(Q);;
 		DestroyQueue(Q);
 	}	
 		

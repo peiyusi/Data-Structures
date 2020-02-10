@@ -39,7 +39,7 @@ ElementType VIPPop(Queue Q);
 bool VIPIsHere(Queue Q, int CurrentTime);
 int GetFinishedTime(int Windows[], int K, int CurrentTime);
 int FindWinAvail(int Windows[], int K, int *WaitTime);
-void Print(Queue Q, int N);
+void Print(Queue Q);
 
 int main() 
 {
@@ -58,7 +58,12 @@ int main()
 			}
 			Push(Q, X);
 		}
-		Print(Q, N);
+		Print(Q);
+		while (!isEmpty(Q)) {
+			X = Pop(Q);
+			printf("%d %d %d\n", X.T, X.P, X.V);
+		}
+
 		DestroyQueue(Q);
 	}	
 		
@@ -117,7 +122,7 @@ ElementType Pop(Queue Q)
 	
 	while (Q->Data[Q->Front].V == -1) {
 		Q->Front++; 
-	} //ÕæÕýÉ¾³ýÀÁ¶èÉ¾³ýµÄ¹Ë¿Í¡£ 
+	} //???????????? 
 		
 	if (isEmpty(Q)) {
 		X.T = EmptyQ;
@@ -125,10 +130,9 @@ ElementType Pop(Queue Q)
 		if (Q->Data[Q->Front].V == 1) {
 			X = VIPPop(Q);
 		} else {
-			X = Q->Data[Q->Front];
+			X = Q->Data[Q->Front++];
 		}		
 	}
-	Q->Front++;
 	
 	return X;
 }
@@ -207,7 +211,7 @@ int GetFinishedTime(int Windows[], int K, int CurrentTime)
 	return CurrentTime + LastTime;
 }
 
-void Print(Queue Q, int N)
+void Print(Queue Q)
 {
 	int Windows[MaxWindow];
 	int ServiceLog[MaxWindow];
@@ -265,7 +269,7 @@ void Print(Queue Q, int N)
 			ServiceLog[WinAvail]++;	
 		}
 				
-		printf("%.1f %d %d\n", (double)TotalTime / (double)N, MaxWaitTime, GetFinishedTime(Windows, K, CurrentTime));
+		printf("%.1f %d %d\n", (double)TotalTime / (double)Q->MaxSize, MaxWaitTime, GetFinishedTime(Windows, K, CurrentTime));
 		printf("%d", ServiceLog[0]);
 		for (i = 1; i < K; i++) {
 			printf(" %d", ServiceLog[i]);
