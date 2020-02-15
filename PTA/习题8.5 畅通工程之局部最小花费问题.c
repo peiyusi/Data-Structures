@@ -2,20 +2,22 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define MaxAdjNum 1001 
+#define MaxVertexNum 101
 
 typedef int Vertex;
 
 typedef Vertex ElementType;
 typedef Vertex SetName;
-typedef ElementType SetType[MaxAdjNum]; //定义并查集 
+typedef ElementType SetType[MaxVertexNum]; //并查集 
 
 typedef int Cost;
+typedef int Build;
 typedef struct ENode *PtrToENode;   //边 
 struct ENode {
 	Vertex V1;
 	Vertex V2;
 	Cost C;
+	Build B;
 };
 typedef PtrToENode Edge;
 
@@ -24,11 +26,12 @@ struct AdjVNode {
 	Vertex Adj;
 	PtrToAdjVNode Next;
 	Cost C;
+	Build B;
 };
 
 typedef struct VNode {     //头节点 
 	PtrToAdjVNode FirstEdge;   
-} AdjList[MaxAdjNum];
+} AdjList[MaxVertexNum];
 
 typedef struct GNode *PtrToGNode; //邻接表 
 struct GNode {
@@ -38,7 +41,7 @@ struct GNode {
 };
 typedef PtrToGNode LGraph;
 
-LGraph CreateGraph(int VertexNum)  //根据顶点数创建一个空图 
+LGraph CreateGraph(int VertexNum)  //创建一个空图 
 {
 	LGraph Graph;
 	Vertex V;
@@ -53,35 +56,39 @@ LGraph CreateGraph(int VertexNum)  //根据顶点数创建一个空图
 	return Graph;
 }
 
-void InsertEdge(LGraph Graph, Edge E)  //插入边，头插法 
+void InsertEdge(LGraph Graph, Edge E)  //头插法插入边 
 {
 	PtrToAdjVNode NewNode;
 	
 	NewNode = (PtrToAdjVNode)malloc(sizeof(struct AdjVNode));
 	NewNode->Adj = E->V2;
 	NewNode->C = E->C;
+	NewNode->B = E->B;
 	NewNode->Next = Graph->G[E->V1].FirstEdge;
 	Graph->G[E->V1].FirstEdge = NewNode;
 	
-	NewNode = (PtrToAdjVNode)malloc(sizeof(struct AdjVNode));
+	NewNode = (PtrToAdjVNode)malloc(sizeof(struct AdjVNode)); //无向图还需要插入边<V2, V1> 
 	NewNode->Adj = E->V1;
 	NewNode->C = E->C;
+	NewNode->B = E->B;
 	NewNode->Next = Graph->G[E->V2].FirstEdge;
 	Graph->G[E->V2].FirstEdge = NewNode;
+	
+	Graph->Ne++;
 }
 
 LGraph BuildGraph()  //读取数据, 把边插入图中 
 {
-	int N, M;
+	int N;
 	LGraph Graph;
 	Edge E;
 	
-	scanf("%d %d", &N, &M);
+	scanf("%d", &N);
 	Graph = CreateGraph(N);
-	Graph->Ne = M; //设定图的边数
-	while (M--) {
+	N = N * (N - 1) / 2;
+	while (N--) {
 		E = (Edge)malloc(sizeof(struct ENode));
-		scanf("%d %d %d", &E->V1, &E->V2, &E->C);
+		scanf("%d %d %d %d", &E->V1, &E->V2, &E->C, &E->B);
 		InsertEdge(Graph, E);
 	}
 	
@@ -96,7 +103,7 @@ void PercDown(Edge ESet, int P, int N)  //过滤最小堆操作，从第一个有叶结点的结点
 	X = ESet[P];
 	for (Parent = P; Parent * 2 + 1 < N; Parent = Child) {
 		Child = Parent * 2 + 1;
-		if (Child != N - 1 && ESet[Child].C > ESet[Child + 1].C) {
+		if (Child != N - 1 && ESet[Child].C > ESet[Child + 1].C) { //如果右结点权重更小，更新子节点 
 			Child++;
 		}
 		if (X.C > ESet[Child].C) {
@@ -120,24 +127,25 @@ void InitESet(Edge ESet, LGraph Graph)
 			if (V < P->Adj) { //无向图的边是双向的，为避免重复录入，只收取V1<V2的边 
 				ESet[ECount].V1 = V;
 				ESet[ECount].V2 = P->Adj;
-				ESet[ECount++].C = P->C;	
+				ESet[ECount].C = P->C;
+				ESet[ECount++].B = P->B;	
 			}
-			
 		}
 	}
-	for (ECount = Graph->Ne / 2 - 1; ECount >= 0; ECount--) {
+	for (ECount = Graph->Ne / 2 - 1; ECount >= 0; ECount--) { //建立最小堆 
 		PercDown(ESet, ECount, Graph->Ne);
 	}
 }
 
-void Swap(Edge E1, Edge E2)  //交换两条边 
+void Swap(Edge E1, Edge E2)  //注意是交换两边的值
 {
 	Vertex V1, V2;
 	Cost C;
+	Build B;
 	
-	V1 = E1->V1, V2 = E1->V2, C = E1->C;
-	E1->V1 = E2->V1, E1->V2 = E2->V2, E1->C = E2->C;
-	E2->V1 = V1, E2->V2 = V2, E2->C = C; 
+	V1 = E1->V1, V2 = E1->V2, C = E1->C, B = E1->B;
+	E1->V1 = E2->V1, E1->V2 = E2->V2, E1->C = E2->C, E1->B = E2->B;
+	E2->V1 = V1, E2->V2 = V2, E2->C = C, E2->B = B;
 }
 
 int GetEdge(Edge ESet, int CurrentSize)
@@ -148,16 +156,7 @@ int GetEdge(Edge ESet, int CurrentSize)
 	return CurrentSize - 1; 
 }
 
-void InitVSet(SetType VSet, int Nv)
-{
-	int i;
-	
-	for (i = 1; i <= Nv; i++) {
-		VSet[i] = -1;
-	}
-}
-
-SetName Find(SetType S, ElementType X)  //寻找根节点并路径压缩 
+SetName Find(SetType S, ElementType X)  //寻找根节点并压缩路径 
 {
 	if (S[X] < 0) {
 		return X;
@@ -176,7 +175,7 @@ void Union(SetType S, ElementType Root1, ElementType Root2)  //合并
 	}
 }
 
-bool CheckCycle(SetType VSet, Vertex V1, Vertex V2)
+bool CheckCycle(SetType VSet, Vertex V1, Vertex V2) //检查是否构成回路 
 {
 	Vertex Root1, Root2;
 	
@@ -185,57 +184,90 @@ bool CheckCycle(SetType VSet, Vertex V1, Vertex V2)
 	if (Root1 == Root2) {
 		return false;
 	} else {
-		Union(VSet, Root1, Root2);
+		Union(VSet, Root1, Root2); //不是的话，把V1, V2并入一个集合 
 		return true;
 	}
 }
+
+void InitVSet(SetType VSet, int Nv) //初始化并查集，注意结点下标从1开始 
+{
+	int i;
+	
+	for (i = 1; i <= Nv; i++) {
+		VSet[i] = -1;
+	}
+}
  
-int Kruskal(LGraph Graph, LGraph MST) //MST为最小生成树，用邻接表存储 
+int CheckEdge(SetType VSet, Edge ESet, int Ne) //检查已建好的道路
+{
+	int ECount, i;
+	
+	ECount = 0;
+	for (i = 0; i < Ne; i++) {
+		if (ESet[i].B) {  //如果已经建造了道路
+			if (CheckCycle(VSet, ESet[i].V1, ESet[i].V2)) { //如果不构成回路 
+				ECount++;	   //累加边数
+			}
+		}
+	}
+	
+	return ECount;	
+} 
+ 
+int Kruskal(LGraph Graph) 
 {
 	Cost TotalCost;
 	int ECount, NextEdge; 
-	Edge ESet; //边的最小堆 
-	SetType VSet; //顶点并查集 
+	Edge ESet; 
+	SetType VSet; 
 	
+	NextEdge = Graph->Ne, TotalCost = 0;
+	//初始化最小堆 
 	ESet = (Edge)malloc(sizeof(struct ENode) * Graph->Ne);
-	InitESet(ESet, Graph); 
+	InitESet(ESet, Graph);
+	//初始化并查集 
 	InitVSet(VSet, Graph->Nv);
-	MST = CreateGraph(Graph->Nv);  
-	TotalCost = ECount = 0;
-	NextEdge = Graph->Ne;
-	while (ECount < Graph->Nv - 1) {
-		NextEdge = GetEdge(ESet, NextEdge);
-		if (NextEdge < 0) {
-			break;
-		}
-		if (CheckCycle(VSet, ESet[NextEdge].V1, ESet[NextEdge].V2) == true) { //如果不构成回路，加入最小生成树中，累加花费 
-			InsertEdge(MST, ESet + NextEdge); //指针运算
-			TotalCost += ESet[NextEdge].C;
-			ECount++; 
+	//统计已经得到的边数 
+	ECount = CheckEdge(VSet, ESet, Graph->Ne);
+	while (ECount < Graph->Nv - 1) {  //最小生成树的边数等于结点数-1 
+		NextEdge = GetEdge(ESet, NextEdge);  //从最小堆中得到权重最小的一条边 
+		if (CheckCycle(VSet, ESet[NextEdge].V1, ESet[NextEdge].V2) == true) { //如果不构成回路 
+			TotalCost += ESet[NextEdge].C;   //累加权重 
+			ECount++;                        //累加边数 
 		}
 	}
 	if (ECount < Graph->Nv - 1) {
 		TotalCost = -1;
 	}
+	free(ESet); //记得释放内存 
 	
 	return TotalCost;
+}
+
+void DestroyGraph(LGraph Graph) //遍历邻接点并释放内存 
+{
+	Vertex V;
+	PtrToAdjVNode P, Temp;
+	
+	for (V = 1; V <= Graph->Nv; V++) {
+		for (P = Graph->G[V].FirstEdge; P; P = Temp) {
+			Temp = P->Next;
+			free(P);
+		}
+	}
+	free(Graph);
 }
 
 int main() 
 {
 	//freopen("E:in.txt", "r", stdin);
-	LGraph Graph, MST;
+	LGraph Graph; 
 	int result;
 	
 	Graph = BuildGraph();
-	result = Kruskal(Graph, MST);
-	if (result == -1) {
-		printf("Impossible");
-	} else {
-		printf("%d", result);
-	}
+	printf("%d", Kruskal(Graph));
+	DestroyGraph(Graph); //记得释放内存 
+
 	//fclose(stdin);
     return 0;
 }
- 
-
