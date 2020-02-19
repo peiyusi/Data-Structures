@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define Cutoff 5
 typedef int ElementType;
@@ -17,18 +18,17 @@ void Swap(List L, int X, int Y)
 	Temp = L->Data[X], L->Data[X] = L->Data[Y], L->Data[Y] = Temp;
 }
 
-void InsertionSort(ElementType *Data, int N)
+void InsertionSort(List L)
 {
 	int i, j, Temp;
 	
-	for (i = 1; i < N; i++) { 
-		Temp = Data[i];
-		for (j = i; j > 0 && Data[j - 1] > Temp; j--) {
-			Data[j] = Data[j - 1];
+	for (i = 1; i < L->Size; i++) { 
+		Temp = L->Data[i];
+		for (j = i; j > 0 && L->Data[j - 1] > Temp; j--) {
+			L->Data[j] = L->Data[j - 1];
 		}
-		Data[j] = Temp;
+		L->Data[j] = Temp;
 	}
-	
 }
 
 int Median3(List L, int Left, int Right)
@@ -111,10 +111,44 @@ void HeapSort(List L)
 	}
 }
 
+void BubbleSort(List L)
+{
+	int i, j;
+	bool flag;
+	
+	for (i = L->Size - 1; i >= 0; i--) {
+		flag = false;
+		for (j = 0; j < i; j++) {
+			if (L->Data[j] > L->Data[j + 1]) {
+				Swap(L, j, j + 1);
+				flag = true;
+			}
+		}
+		if (!flag) {
+			break;
+		}
+	}	
+} 
+
+void SimpleSelectionSort(List L)
+{
+	int min, i, j;
+	
+	for (i = 0; i < L->Size - 1; i++) {
+		min = i;
+		for (j = i + 1; j < L->Size; j++) {
+			if (L->Data[j] < L->Data[min]) {
+				min = j;
+			}
+		}
+		Swap(L, i, min);
+	}
+}
+
 void Sort(List L)
 {
 	if (L) {
-		HeapSort(L);
+		InsertionSort(L);
 	}
 }
 
@@ -162,6 +196,8 @@ int main()
 	L = Read();
 	Sort(L);
 	Print(L);
+	free(L->Data);
+	free(L); 
 	fclose(stdin);
 	return 0;
 }

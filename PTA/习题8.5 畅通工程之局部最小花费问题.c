@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define MaxVertexNum 101
+#define MaxVertexNum 101 //最大顶点数，注意顶点下标从1开始 
 
 typedef int Vertex;
 
@@ -236,9 +236,6 @@ int Kruskal(LGraph Graph)
 			ECount++;                        //累加边数 
 		}
 	}
-	if (ECount < Graph->Nv - 1) {
-		TotalCost = -1;
-	}
 	free(ESet); //记得释放内存 
 	
 	return TotalCost;
@@ -260,7 +257,6 @@ void DestroyGraph(LGraph Graph) //遍历邻接点并释放内存
 
 int main() 
 {
-	//freopen("E:in.txt", "r", stdin);
 	LGraph Graph; 
 	int result;
 	
@@ -268,6 +264,5 @@ int main()
 	printf("%d", Kruskal(Graph));
 	DestroyGraph(Graph); //记得释放内存 
 
-	//fclose(stdin);
     return 0;
 }
